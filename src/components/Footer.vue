@@ -4,8 +4,8 @@
             <strong>10</strong> items left
         </span>
         <ul class="filters">
-            <li>
-                <a href="javascript:;" class="selected">Done</a>
+            <li v-for="(filter, idx) in filters" :key="idx">
+                <a href="javascript:;" class="selected">{{filter}}</a>
             </li>
         </ul>
         <button class="clear-completed" style="display: none;">Clear completed</button>
@@ -13,7 +13,8 @@
 </template>
 
 <script>
-export default {};
+export default {
+};
 </script>
 
 <style scoped>

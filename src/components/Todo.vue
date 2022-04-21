@@ -1,20 +1,58 @@
 <template>
     <section class="main">
         <ul class="todo-list">
-            <li class="todo">
+            <li 
+              :class="{todo: true, completed: isDone, editing: edit.id === id}" 
+              v-for="({id, text, isDone}) in todos" 
+              :key="id">
                 <div class="view">
-                    <input class="toggle" type="checkbox">
-                    <label>Hello</label>
-                    <button class="destroy"></button>
+                    <input class="toggle" type="checkbox" :checked="isDone" @click="handleDone(id)">
+                    <label @dblclick="handleEdit({text, id})">{{text}}</label>
+                    <button class="destroy" @click="handleRemove(id)"></button>
                 </div>
-                <input class="edit" type="text">
+                <input class="edit" type="text" v-model="edit.text" @keypress="handleUpdate"/>
             </li>
         </ul>
     </section>
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    todos: {type: Array, default: () => []}
+  },
+  data() {
+    return {
+      edit: {
+        text: "",
+        id: -1
+      }
+    };
+  },
+  methods: {
+    handleRemove(id){
+      this.$emit("removeTodo", id);
+    },
+    handleDone(id){
+      this.$emit("updateDone", id);
+    },
+    handleEdit({text, id}){
+      this.edit = {
+        text,
+        id
+      };
+    },
+    handleUpdate({keyCode}){
+      if (keyCode === 13){
+        this.$emit("updateTodo", this.edit);
+        this.edit = {
+          text: "",
+          id: -1
+        };
+      }
+    }
+  }
+};
 </script>
 
 <style>
